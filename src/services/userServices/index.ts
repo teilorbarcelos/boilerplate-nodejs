@@ -89,7 +89,7 @@ class UserService {
       }
     );
 
-    return { accessToken, refreshToken, user };
+    return { accessToken, refreshToken };
   }
 
   async update({ id, name, password }: UserProps) {

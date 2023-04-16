@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UserService } from "@/services/userServices";
+import { AuthPayloadProps } from "@/middlewares/onlyAuth/onlyAuth.interface";
 
 class UserController {
   async handleAuth(request: Request, response: Response) {
@@ -20,17 +21,14 @@ class UserController {
   }
 
   async handleRefreshToken(request: Request, response: Response) {
-    const { email, password } = request.body;
+    const { user } = request.body as AuthPayloadProps;
 
     const service = new UserService();
 
     try {
-      const user = await service.authenticate({
-        email,
-        password,
-      });
+      const tokens = await service.refreshToken(user);
 
-      return response.json(user);
+      return response.json(tokens);
     } catch (error) {
       return response.json({ error: error.message });
     }
