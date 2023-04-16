@@ -1,8 +1,25 @@
 import { Request, Response } from "express";
-import { UserService } from "../services/userService";
+import { UserService } from "@/services/userServices";
 
 class UserController {
   async handleAuth(request: Request, response: Response) {
+    const { email, password } = request.body;
+
+    const service = new UserService();
+
+    try {
+      const user = await service.authenticate({
+        email,
+        password,
+      });
+
+      return response.json(user);
+    } catch (error) {
+      return response.json({ error: error.message });
+    }
+  }
+
+  async handleRefreshToken(request: Request, response: Response) {
     const { email, password } = request.body;
 
     const service = new UserService();

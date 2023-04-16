@@ -1,17 +1,10 @@
-import { compare, compareSync, hash } from "bcryptjs";
-import { sign, verify } from "jsonwebtoken";
-import prismaClient from "../prisma";
-
-interface IUser {
-  id?: string;
-  name?: string;
-  email?: string;
-  password?: string;
-  admin?: boolean;
-}
+import { compareSync, hash } from "bcryptjs";
+import { sign } from "jsonwebtoken";
+import prismaClient from "@/prisma";
+import { UserProps } from "@/services/userServices/userService.interface";
 
 class UserService {
-  async authenticate({ email, password }: IUser) {
+  async authenticate({ email, password }: UserProps) {
     const userResponse = await prismaClient.user.findFirst({
       where: {
         email,
@@ -40,7 +33,22 @@ class UserService {
       active: userResponse.active,
     };
 
-    const token = sign(
+    const accessToken = sign(
+      {
+        user: {
+          name: user.name,
+          login: user.email,
+          admin: user.admin,
+        },
+      },
+      process.env.HASH,
+      {
+        subject: user.id,
+        expiresIn: "1h",
+      }
+    );
+
+    const refreshToken = sign(
       {
         user: {
           name: user.name,
@@ -55,10 +63,36 @@ class UserService {
       }
     );
 
-    return { token, user };
+    return { accessToken, refreshToken, user };
   }
 
-  async update({ id, name, password }: IUser) {
+  async refreshToken(user: UserProps) {
+    const accessToken = sign(
+      {
+        user,
+      },
+      process.env.HASH,
+      {
+        subject: user.id,
+        expiresIn: "1h",
+      }
+    );
+
+    const refreshToken = sign(
+      {
+        user,
+      },
+      process.env.HASH,
+      {
+        subject: user.id,
+        expiresIn: "7d",
+      }
+    );
+
+    return { accessToken, refreshToken, user };
+  }
+
+  async update({ id, name, password }: UserProps) {
     const user = await prismaClient.user.findFirst({
       where: {
         id,

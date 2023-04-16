@@ -1,5 +1,5 @@
 import express from 'express'
-import { router } from './routes'
+import { router } from '@/routes'
 import rateLimit from 'express-rate-limit'
 import cors from 'cors'
 
