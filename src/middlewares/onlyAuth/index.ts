@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { AuthPayloadProps } from "@/middlewares/onlyAuth/onlyAuth.interface";
+import { AuthPayloadProps } from "./onlyAuth.interface";
 
 export function onlyAuth(
   request: AuthPayloadProps,
@@ -16,7 +16,10 @@ export function onlyAuth(
   const authToken = request.headers.authorization.replace("Bearer ", "");
 
   try {
-    const { sub, user } = verify(authToken, process.env.HASH) as AuthPayloadProps;
+    const { sub, user } = verify(
+      authToken,
+      process.env.HASH
+    ) as AuthPayloadProps;
     request.id = sub;
     request.user = user;
   } catch (error) {

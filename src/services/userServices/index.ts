@@ -1,7 +1,7 @@
 import { compareSync, hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
-import prismaClient from "@/prisma";
-import { UserProps } from "@/services/userServices/userService.interface";
+import { UserProps } from "./userService.interface";
+import prismaClient from "../../prisma";
 
 class UserService {
   async authenticate({ email, password }: UserProps) {

@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -14,7 +13,7 @@ datasource db {
 // --------------------------------------
 
 model User {
-  id             String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   name           String?
@@ -26,7 +25,7 @@ model User {
 }
 
 model Profile {
-  id                 String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
   name               String?
