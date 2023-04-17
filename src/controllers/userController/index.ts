@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserService } from "../../services/userServices";
-import { AuthPayloadProps } from "../../middlewares/onlyAuth/onlyAuth.interface";
+import { RefreshTokenProps } from "../../middlewares/onlyAuth/onlyAuth.interface";
 
 class UserController {
   async handleAuth(request: Request, response: Response) {
@@ -16,21 +16,21 @@ class UserController {
 
       return response.json(user);
     } catch (error) {
-      return response.json({ error: error.message });
+      return response.status(401).json({ error: error.message });
     }
   }
 
   async handleRefreshToken(request: Request, response: Response) {
-    const { user } = request.body as AuthPayloadProps;
+    const { refreshToken } = request.body as RefreshTokenProps;
 
     const service = new UserService();
 
     try {
-      const tokens = await service.refreshToken(user);
+      const tokens = await service.refreshToken(refreshToken);
 
       return response.json(tokens);
     } catch (error) {
-      return response.json({ error: error.message });
+      return response.status(401).json({ error: error.message });
     }
   }
 
@@ -40,11 +40,11 @@ class UserController {
 
     const service = new UserService();
 
-    if (password !== password2) {
-      return response.json({ error: "The passwords dont match!" });
-    }
-
     try {
+      if (password !== password2) {
+        throw new Error("The passwords dont match!");
+      }
+
       const user = await service.update({
         id: user_id ? user_id : id,
         name,
@@ -53,7 +53,7 @@ class UserController {
 
       return response.json(user);
     } catch (error) {
-      return response.json({ error: error.message });
+      return response.status(401).json({ error: error.message });
     }
   }
 }

@@ -20,6 +20,12 @@ app.use(rateLimiter);
 
 const port = process.env.PORT || 3300;
 
-app.listen(port, () =>
+const server = app.listen(port, () =>
   console.log(`Server runing on http://localhost:${port}`)
 );
+
+const closeServer = async () => {
+  server.close();
+};
+
+export { app, closeServer };

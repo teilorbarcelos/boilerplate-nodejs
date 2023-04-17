@@ -1,10 +1,16 @@
 import { compareSync, hash } from "bcryptjs";
-import { sign } from "jsonwebtoken";
-import { UserProps } from "./userService.interface";
+import { sign, verify } from "jsonwebtoken";
+import {
+  AuthRequestProps, UpdateUserRequestProps
+} from "./userService.interface";
 import prismaClient from "../../prisma";
+import { AuthPayloadProps } from "../../middlewares/onlyAuth/onlyAuth.interface";
 
 class UserService {
-  async authenticate({ email, password }: UserProps) {
+  async authenticate({
+    email,
+    password
+  }: AuthRequestProps) {
     const userResponse = await prismaClient.user.findFirst({
       where: {
         email,
@@ -12,17 +18,17 @@ class UserService {
     });
 
     if (!userResponse) {
-      return { error: "Wrong login or password!" };
+      throw new Error("Wrong login or password!");
     }
 
     const passwordMatch = compareSync(password, userResponse.hashedPassword);
 
     if (!passwordMatch) {
-      return { error: "Wrong login or password!" };
+      throw new Error("Wrong login or password!");
     }
 
     if (!userResponse.active) {
-      return { error: "This user was blocked by the system administrator!" };
+      throw new Error("This user was blocked by the system administrator!");
     }
 
     const user = {
@@ -37,7 +43,7 @@ class UserService {
       {
         user: {
           name: user.name,
-          login: user.email,
+          email: user.email,
           admin: user.admin,
         },
       },
@@ -52,7 +58,7 @@ class UserService {
       {
         user: {
           name: user.name,
-          login: user.email,
+          email: user.email,
           admin: user.admin,
         },
       },
@@ -66,33 +72,31 @@ class UserService {
     return { accessToken, refreshToken, user };
   }
 
-  async refreshToken(user: UserProps) {
+  async refreshToken(refreshToken: string) {
+    const { sub, user } = verify(
+      refreshToken,
+      process.env.HASH
+    ) as AuthPayloadProps;
+
     const accessToken = sign(
       {
-        user,
+        user: {
+          name: user.name,
+          email: user.email,
+          admin: user.admin,
+        },
       },
       process.env.HASH,
       {
-        subject: user.id,
+        subject: sub,
         expiresIn: "1h",
       }
     );
 
-    const refreshToken = sign(
-      {
-        user,
-      },
-      process.env.HASH,
-      {
-        subject: user.id,
-        expiresIn: "7d",
-      }
-    );
-
-    return { accessToken, refreshToken };
+    return { accessToken };
   }
 
-  async update({ id, name, password }: UserProps) {
+  async update({ id, name, password }: UpdateUserRequestProps) {
     const user = await prismaClient.user.findFirst({
       where: {
         id,
@@ -100,9 +104,7 @@ class UserService {
     });
 
     if (password === "") {
-      password = user.hashedPassword;
-    } else {
-      password = await hash(password, 8);
+      throw new Error("Wrong password!")
     }
 
     const userUpdate = await prismaClient.user.update({

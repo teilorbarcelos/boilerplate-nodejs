@@ -1,7 +1,11 @@
 import { Request } from "express";
-import { UserProps } from "../../services/userServices/userService.interface";
+import { UpdateUserRequestProps } from "../../services/userServices/userService.interface";
 
 export interface AuthPayloadProps extends Request {
   sub: string;
-  user: UserProps;
+  user: UpdateUserRequestProps;
+}
+
+export interface RefreshTokenProps extends Request {
+  refreshToken: string;
 }
