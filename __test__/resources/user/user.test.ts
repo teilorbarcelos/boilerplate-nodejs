@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import prismaClient from "../../../src/prisma";
 import request from "supertest";
 import { app } from "../../../src/server";
@@ -104,8 +104,6 @@ describe("User Resource", () => {
       email: user.email,
       admin: user.admin,
     });
-
-
 
     const errorResponse = await request(app).post("/user/token").send({
       refreshToken: "wrongToken",

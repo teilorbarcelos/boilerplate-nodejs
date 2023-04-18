@@ -1,16 +1,14 @@
-import { compareSync, hash } from "bcryptjs";
+import { compareSync } from "bcryptjs";
 import { sign, verify } from "jsonwebtoken";
 import {
-  AuthRequestProps, UpdateUserRequestProps
+  AuthRequestProps,
+  UpdateUserRequestProps,
 } from "./userService.interface";
 import prismaClient from "../../prisma";
 import { AuthPayloadProps } from "../../middlewares/onlyAuth/onlyAuth.interface";
 
 class UserService {
-  async authenticate({
-    email,
-    password
-  }: AuthRequestProps) {
+  async authenticate({ email, password }: AuthRequestProps) {
     const userResponse = await prismaClient.user.findFirst({
       where: {
         email,
@@ -97,14 +95,8 @@ class UserService {
   }
 
   async update({ id, name, password }: UpdateUserRequestProps) {
-    const user = await prismaClient.user.findFirst({
-      where: {
-        id,
-      },
-    });
-
     if (password === "") {
-      throw new Error("Wrong password!")
+      throw new Error("Wrong password!");
     }
 
     const userUpdate = await prismaClient.user.update({

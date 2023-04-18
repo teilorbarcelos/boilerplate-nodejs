@@ -11,10 +11,10 @@
         "indent": [
             "error",
             2
-        ],
-        "semi": [
-            "error",
-            "never"
         ]
+    },
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     }
 }

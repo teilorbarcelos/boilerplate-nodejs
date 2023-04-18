@@ -1,5 +1,3 @@
-import { User } from "@prisma/client";
-
 export interface AuthRequestProps {
   email?: string;
   password?: string;
