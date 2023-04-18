@@ -1,6 +1,5 @@
 /* eslint-disable */
-
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { closeServer } from "./src/server";
 
 let prisma;

@@ -1,7 +1,7 @@
 import express from "express";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
-import { router } from "./routes";
+import { router } from "@/routes";
 
 const app = express();
 

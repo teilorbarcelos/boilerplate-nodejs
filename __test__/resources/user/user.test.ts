@@ -1,9 +1,9 @@
 import { User } from "@prisma/client";
-import prismaClient from "../../../src/prisma";
+import prismaClient from "@/prisma";
 import request from "supertest";
-import { app } from "../../../src/server";
+import { app } from "@/server";
 import { verify } from "jsonwebtoken";
-import { AuthPayloadProps } from "../../../src/middlewares/onlyAuth/onlyAuth.interface";
+import { AuthPayloadProps } from "@/middlewares/onlyAuth/onlyAuth.interface";
 
 const user = {
   id: "61794aa019f2084592d12809",

@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/server.js",
-    "dev": "ts-node-dev --exit-child src/server.ts",
+    "dev": "ts-node-dev --exit-child -r tsconfig-paths/register src/server.ts",
     "build": "tsc",
     "test": "jest",
     "pre-commit": "lint-staged && yarn test",
@@ -45,6 +45,7 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4"
   }
 }

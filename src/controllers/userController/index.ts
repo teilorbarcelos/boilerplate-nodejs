@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { UserService } from "../../services/userServices";
-import { RefreshTokenProps } from "../../middlewares/onlyAuth/onlyAuth.interface";
+import { UserService } from "@/services/userServices";
+import { RefreshTokenProps } from "@/middlewares/onlyAuth/onlyAuth.interface";
 
 class UserController {
   async handleAuth(request: Request, response: Response) {

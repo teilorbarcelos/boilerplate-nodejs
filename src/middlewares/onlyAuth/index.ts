@@ -1,6 +1,6 @@
 import { NextFunction, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { AuthPayloadProps } from "./onlyAuth.interface";
+import { AuthPayloadProps } from "@/middlewares/onlyAuth/onlyAuth.interface";
 
 export function onlyAuth(
   request: AuthPayloadProps,

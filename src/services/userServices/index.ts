@@ -3,9 +3,9 @@ import { sign, verify } from "jsonwebtoken";
 import {
   AuthRequestProps,
   UpdateUserRequestProps,
-} from "./userService.interface";
-import prismaClient from "../../prisma";
-import { AuthPayloadProps } from "../../middlewares/onlyAuth/onlyAuth.interface";
+} from "@/services/userServices/userService.interface";
+import prismaClient from "@/prisma";
+import { AuthPayloadProps } from "@/middlewares/onlyAuth/onlyAuth.interface";
 
 class UserService {
   async authenticate({ email, password }: AuthRequestProps) {
