@@ -7,7 +7,16 @@
     "start": "node ./src/server.js",
     "dev": "ts-node-dev --exit-child src/server.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "pre-commit": "lint-staged && yarn test",
+    "lint": "editorconfig-checker && eslint .",
+    "commitmsg": "commitlint -E HUSKY_GIT_PARAMS"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "commit-msg": "yarn commitmsg"
+    }
   },
   "tsconfig": "tsconfig.json",
   "dependencies": {
@@ -20,14 +29,22 @@
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
     "@types/jsonwebtoken": "^9.0.1",
     "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "editorconfig-checker": "^5.0.1",
+    "editorconfig-cli": "^0.3.0",
+    "husky": "^8.0.3",
     "jest": "^29.5.0",
     "jest-mock-extended": "^3.0.4",
+    "lint-staged": "^13.2.1",
     "prisma": "^4.12.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
