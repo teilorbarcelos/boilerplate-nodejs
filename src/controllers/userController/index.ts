@@ -14,7 +14,7 @@ class UserController {
         password,
       });
 
-      return response.json(user);
+      return response.status(200).json(user);
     } catch (error) {
       return response.status(401).json({ error: error.message });
     }

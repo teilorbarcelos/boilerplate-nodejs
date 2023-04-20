@@ -21,7 +21,7 @@ const user = {
 describe("User Resource", () => {
   test("should authenticate user", async () => {
     jest.spyOn(prismaClient.user, "findFirst").mockResolvedValueOnce(user);
-    const response = await request(app).post("/user/authenticate").send({
+    const response = await request(app).post("/v1/user/authenticate").send({
       email: "test@test.com",
       password: "123",
     });
@@ -42,7 +42,7 @@ describe("User Resource", () => {
   test("should not authenticate user with wrong credentials or admin block", async () => {
     jest.spyOn(prismaClient.user, "findFirst").mockResolvedValueOnce(user);
     const responseWrongPassword = await request(app)
-      .post("/user/authenticate")
+      .post("/v1/user/authenticate")
       .send({
         email: "test@test.com",
         password: "1234",
@@ -54,7 +54,7 @@ describe("User Resource", () => {
     expect(responseWrongPassword.status).toEqual(401);
 
     const responseWrongEmail = await request(app)
-      .post("/user/authenticate")
+      .post("/v1/user/authenticate")
       .send({
         email: "test1@test.com",
         password: "123",
@@ -70,7 +70,7 @@ describe("User Resource", () => {
       .mockResolvedValueOnce({ ...user, active: false });
 
     const responseAdminBlock = await request(app)
-      .post("/user/authenticate")
+      .post("/v1/user/authenticate")
       .send({
         email: "test@test.com",
         password: "123",
@@ -84,12 +84,12 @@ describe("User Resource", () => {
 
   test("should renew access token if it is valid", async () => {
     jest.spyOn(prismaClient.user, "findFirst").mockResolvedValueOnce(user);
-    const authResponse = await request(app).post("/user/authenticate").send({
+    const authResponse = await request(app).post("/v1/user/authenticate").send({
       email: "test@test.com",
       password: "123",
     });
 
-    const successResponse = await request(app).post("/user/token").send({
+    const successResponse = await request(app).post("/v1/user/token").send({
       refreshToken: authResponse.body.refreshToken,
     });
 
@@ -105,7 +105,7 @@ describe("User Resource", () => {
       admin: user.admin,
     });
 
-    const errorResponse = await request(app).post("/user/token").send({
+    const errorResponse = await request(app).post("/v1/user/token").send({
       refreshToken: "wrongToken",
     });
 
@@ -119,7 +119,7 @@ describe("User Resource", () => {
     jest.spyOn(prismaClient.user, "findFirst").mockResolvedValueOnce(user);
     jest.spyOn(prismaClient.user, "update").mockResolvedValueOnce(user);
 
-    const responseWithPassword = await request(app).post("/user/update").send({
+    const responseWithPassword = await request(app).post("/v1/user/update").send({
       id: "61794aa019f2084592d12809",
       name: "123",
       password: "123",
@@ -129,7 +129,7 @@ describe("User Resource", () => {
     expect(responseWithPassword.body).toEqual(user);
 
     const responseWithoutPassword = await request(app)
-      .post("/user/update")
+      .post("/v1/user/update")
       .send({
         id: "61794aa019f2084592d12809",
         user_id: "61794aa019f2084592d12809",
@@ -144,7 +144,7 @@ describe("User Resource", () => {
     expect(responseWithoutPassword.status).toEqual(401);
 
     const responseUnmatchPassword = await request(app)
-      .post("/user/update")
+      .post("/v1/user/update")
       .send({
         id: "61794aa019f2084592d12809",
         user_id: "61794aa019f2084592d12809",

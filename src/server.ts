@@ -2,6 +2,8 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import { router } from "@/routes";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocs from "./swagger.json";
 
 const app = express();
 
@@ -15,7 +17,8 @@ const rateLimiter = rateLimit({
 app.use(cors({ origin: "*" }));
 
 app.use(express.json());
-app.use(router);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/v1", router);
 app.use(rateLimiter);
 
 const port = process.env.PORT || 3300;
